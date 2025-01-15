@@ -5,15 +5,24 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Repositories\EventRepository;
 
 class EventController extends Controller
 {
+    protected $eventRepository;
+
+    public function __construct(EventRepository $eventRepository)
+    {
+        $this->eventRepository = $eventRepository;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $events = $this->eventRepository->getAll();
+        return response()->json($events);
     }
 
     /**
@@ -29,7 +38,8 @@ class EventController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $event = $this->eventRepository->getById($id);
+        return response()->json($event);
     }
 
     /**

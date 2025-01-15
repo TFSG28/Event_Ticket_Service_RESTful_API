@@ -19,6 +19,7 @@ return new class extends Migration
                 $table->text('description');
                 $table->datetime('date');
                 $table->integer('availability')->unsigned();
+                $table->timestamps();
             });
         }
     }
