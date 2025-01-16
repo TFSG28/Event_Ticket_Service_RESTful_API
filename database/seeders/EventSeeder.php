@@ -24,7 +24,6 @@ class EventSeeder extends Seeder
                 ]
             );
         } catch (\Exception $exception) {
-            dd($exception);
             Log::getLogger()->info($exception->getMessage());
         }
         // Event 2

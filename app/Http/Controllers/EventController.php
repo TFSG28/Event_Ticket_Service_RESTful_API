@@ -17,7 +17,7 @@ class EventController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the events.
      */
     public function index()
     {
@@ -26,15 +26,16 @@ class EventController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created event.
      */
     public function store(Request $request)
     {
-        //
+        $this->eventRepository->create($request->all());
+        return response()->json(['message' => 'Event created successfully']);
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified event.
      */
     public function show(string $id)
     {
@@ -43,18 +44,20 @@ class EventController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified event.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $this->eventRepository->update($id, $request->all());
+        return response()->json(['message' => 'Event updated successfully']);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified event.
      */
     public function destroy(string $id)
     {
-        //
+        $this->eventRepository->delete($id);
+        return response()->json(['message' => 'Event deleted successfully']);
     }
 }

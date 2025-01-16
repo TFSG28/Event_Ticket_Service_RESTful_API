@@ -14,6 +14,7 @@ return new class extends Migration
     {
         if (!Schema::hasTable(Reservation::TABLE)) {
             Schema::create(Reservation::TABLE, function (Blueprint $table) {
+                $table->id();
                 $table->foreignId('user_id')->constrained('users');
                 $table->foreignId('event_id')->constrained('events');
                 $table->integer('number_of_tickets')->unsigned();
