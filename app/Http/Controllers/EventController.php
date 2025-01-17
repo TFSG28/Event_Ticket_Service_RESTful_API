@@ -21,8 +21,12 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = $this->eventRepository->getAll();
-        return response()->json($events);
+        try {
+            $events = $this->eventRepository->getAll();
+            return response()->json($events);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 404);
+        }
     }
 
     /**
@@ -30,8 +34,12 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $this->eventRepository->create($request->all());
-        return response()->json(['message' => 'Event created successfully']);
+        try {
+            $this->eventRepository->create($request->all());
+            return response()->json(['message' => 'Event created successfully']);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 400);
+        }
     }
 
     /**
@@ -39,8 +47,12 @@ class EventController extends Controller
      */
     public function show(string $id)
     {
-        $event = $this->eventRepository->getById($id);
-        return response()->json($event);
+        try {
+            $event = $this->eventRepository->getById($id);
+            return response()->json($event);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 404);
+        }
     }
 
     /**
@@ -48,8 +60,12 @@ class EventController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $this->eventRepository->update($id, $request->all());
-        return response()->json(['message' => 'Event updated successfully']);
+        try {
+            $this->eventRepository->update($id, $request->all());
+            return response()->json(['message' => 'Event updated successfully']);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 400);
+        }
     }
 
     /**
@@ -57,7 +73,11 @@ class EventController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->eventRepository->delete($id);
-        return response()->json(['message' => 'Event deleted successfully']);
+        try {
+            $this->eventRepository->delete($id);
+            return response()->json(['message' => 'Event deleted successfully']);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 400);
+        }
     }
 }

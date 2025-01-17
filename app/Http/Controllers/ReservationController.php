@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Reservation;
 use App\Models\Event;
 use App\Repositories\ReservationRepository;
+use Exception;
 
 class ReservationController extends Controller
 {
@@ -20,10 +21,19 @@ class ReservationController extends Controller
     /**
      * Display a listing of the reservations.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $reservations = $this->reservationRepository->getAll();
-        return response()->json($reservations);
+        try {
+            $query_params = $request->query();
+            $valid_inputs = ['event_id', 'user_id'];
+            $query_params = array_filter($query_params, function($key) use ($valid_inputs) {
+                return in_array($key, $valid_inputs);
+            }, ARRAY_FILTER_USE_KEY);
+            $reservations = $this->reservationRepository->getByQueryParams($query_params);
+            return response()->json($reservations);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 404);
+        }
     }
 
     /**
@@ -31,36 +41,35 @@ class ReservationController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the request
-        $validated = $request->validate([
-            'event_id' => 'required|exists:events,id',
-            'name' => 'required|string',
-            'user_id' => 'required|exists:users,id',
-            'number_of_tickets' => 'required|integer|min:1',
-        ]);
+        try {
+            $reservations = [];
+            $events = [];
 
-        // Check if the event is available
-        $event = Event::find($validated['event_id']);
+            // Iterate if multiple reservations are being made
+            if (is_array($request->all())) {
+                foreach ($request->all() as $ticket) {
+                    $event = $this->validateReservation($ticket);
+                    if ($event) {
+                        $events[] = $event;
+                        $reservations[] = $ticket;
+                    }
+                }
+            }
+            else {
+                $event = $this->validateReservation($request->all());
+                if ($event) {
+                    $events[] = $event;
+                    $reservations[] = $request->all();
+                }
+            }
 
-        // Check if the event has tickets available
-        if ($event->availability < $validated['number_of_tickets']) {
-            return response()->json(['message' => 'Not enough tickets available'], 400);
+            $this->reservationRepository->create($reservations);
+
+            // Return the reservation and a success message
+            return response()->json(['message' => 'Reservation created successfully', 'reservation' => $reservations]);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 400);
         }
-
-        // Check if the event has ended
-        if ($event->date < now()) {
-            return response()->json(['message' => 'Event has ended'], 400);
-        }
-
-        // Update the event available tickets
-        $event->availability -= $validated['number_of_tickets'];
-        $event->save();
-
-        // Create the reservation
-        $reservation = $this->reservationRepository->create($request->all());
-
-        // Return the reservation and a success message
-        return response()->json(['message' => 'Reservation created successfully', 'reservation' => $reservation]);
     }
 
     /**
@@ -68,8 +77,12 @@ class ReservationController extends Controller
      */
     public function show(string $id)
     {
-        $reservation = $this->reservationRepository->getById($id);
-        return response()->json($reservation);
+        try {
+            $reservation = $this->reservationRepository->getById($id);
+            return response()->json($reservation);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 404);
+        }
     }
 
     /**
@@ -77,51 +90,90 @@ class ReservationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Validate the request
-        $validated = $request->validate([
-            'number_of_tickets' => 'required|integer|min:1',
-        ]);
+        try {
+            // Validate the request
+            $validated = $request->validate([
+                'number_of_tickets' => 'required|integer|min:1',
+            ]);
 
-        // Find the reservation and event
-        $reservation = Reservation::find($id);
-        $event = Event::find($reservation->event_id);
+            // Find the reservation and event
+            $reservation = Reservation::find($id);
+            $event = Event::find($reservation->event_id);
 
-        $newNumberOfTickets = $validated['number_of_tickets'];
-        $difference = $newNumberOfTickets - $reservation->number_of_tickets;
+            $newNumberOfTickets = $validated['number_of_tickets'];
+            $difference = $newNumberOfTickets - $reservation->number_of_tickets;
 
-        // Check if the event has enough tickets available
-        if ($event->availability < $difference) {
-            return response()->json(['message' => 'Not enough tickets available'], 400);
-        }
+            // Check if the event has enough tickets available
+            if ($event->availability < $difference) {
+                return response()->json(['message' => 'Not enough tickets available'], 400);
+            }
 
-        // Update the event available tickets
-        $event->availability -= $difference;
-        $event->save();
+            // Update the event available tickets
+            $event->availability -= $difference;
+            $event->save();
 
-        // Update the reservation
-        $reservation->update($request->all());
+            // Update the reservation
+            $reservation->update($request->all());
 
         // Return a success message
-        return response()->json(['message' => 'Reservation updated successfully']);
+            return response()->json(['message' => 'Reservation updated successfully', 'reservation' => $reservation]);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 400);
+        }
     }
 
     /**
      * Remove the specified reservation.
      */
     public function destroy(string $id)
-    {
-        // Delete the reservation
-        $this->reservationRepository->delete($id);
+    {  
+        try {
+            // Find the reservation and event
+            $reservation = Reservation::find($id);
+            $event = Event::find($reservation->event_id);
 
-        // Find the reservation and event
-        $reservation = Reservation::find($id);
-        $event = Event::find($reservation->event_id);
+            // Update the event available tickets
+            $event->availability += $reservation->number_of_tickets;
+            $event->save();
 
-        // Update the event available tickets
-        $event->availability += $reservation->number_of_tickets;
-        $event->save();
+            // Delete the reservation
+            $this->reservationRepository->delete($id);
 
-        // Return a success message
-        return response()->json(['message' => 'Reservation deleted successfully']);
+            // Return a success message
+            return response()->json(['message' => 'Reservation deleted successfully']);
+
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 404);
+        }
     }
+
+    private function validateReservation($ticket)
+    {
+        // Validate the request
+        //$validated = $ticket->validate([
+        //    'event_id' => 'required|exists:events,id',
+        //    'name' => 'required|string',
+        //    'user_id' => 'required|exists:users,id',
+        //    'number_of_tickets' => 'required|integer|min:1',
+        //    ]);
+
+        // Check if the event is available
+        $event = Event::find($ticket['event_id']);
+
+        // Check if the event has tickets available
+        if ($event->availability < $ticket['number_of_tickets']) {
+            throw new Exception("Not enough tickets available for event '{$event->name}'");
+        }
+
+        // Check if the event has ended
+        if ($event->date < now()) { 
+           throw new Exception("Event has ended for event '{$event->name}'");
+        }
+    
+        // Update the event available tickets
+        $event->availability -= $ticket['number_of_tickets'];
+
+        return $event;
+    }
+    
 }

@@ -62,4 +62,15 @@ class ReservationRepository
     {
         Reservation::findOrFail($id)->delete();
     }
+
+    /**
+     * Get all reservations by query parameters
+     *
+     * @param array $query_params query parameters
+     * @return Collection of Reservation instances
+     */
+    public function getByQueryParams($query_params)
+    {
+        return Reservation::where($query_params)->get();
+    }
 }

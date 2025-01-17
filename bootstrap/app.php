@@ -15,7 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'events/*',
             'reservations/*',
             'reservations',
-            'events'
+            'events',
+            'register',
+            'login',
+            'logout',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
