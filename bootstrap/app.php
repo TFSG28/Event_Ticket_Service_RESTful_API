@@ -12,13 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except: [
-            'events/*',
-            'reservations/*',
-            'reservations',
-            'events',
-            'register',
-            'login',
-            'logout',
+            'api/v1/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

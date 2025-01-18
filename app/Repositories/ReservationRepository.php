@@ -3,7 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Reservation;
-
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 /**
  * Reservation repository class
  */
@@ -15,9 +16,9 @@ class ReservationRepository
      * @param int $id Reservation id
      * @return Reservation instance
      */
-    public function getById($id)
+    public function getById(int $id): Reservation
     {
-        return Reservation::findOrFail($id);
+        return $this->checkReservationExists($id);
     }
 
     /**
@@ -25,7 +26,7 @@ class ReservationRepository
      *
      * @return Collection of Reservation instances
      */
-    public function getAll()
+    public function getAll(): Collection
     {
         return Reservation::all();
     }
@@ -36,7 +37,7 @@ class ReservationRepository
      * @param array $data data to create a reservation
      * @return Reservation instance
      */
-    public function create($data)
+    public function create(array $data): Reservation
     {
         return Reservation::create($data);
     }
@@ -46,21 +47,22 @@ class ReservationRepository
      *
      * @param int $id Reservation id
      * @param array $data data to update a reservation
-     * @return Reservation instance
+     * @return bool true if reservation updated, false otherwise
      */
-    public function update($id, $data): Reservation
+    public function update(int $id, array $data): bool
     {
-        return Reservation::findOrFail($id)->update($data);
+        return $this->checkReservationExists($id)->update($data);
     }
 
     /**
      * Delete a reservation
      *
      * @param int $id Reservation id
+     * @return bool true if reservation deleted, false otherwise
      */
-    public function delete($id)
+    public function delete(int $id): bool
     {
-        Reservation::findOrFail($id)->delete();
+        return $this->checkReservationExists($id)->delete();
     }
 
     /**
@@ -69,8 +71,23 @@ class ReservationRepository
      * @param array $query_params query parameters
      * @return Collection of Reservation instances
      */
-    public function getByQueryParams($query_params)
+    public function getByQueryParams(array $query_params): Collection
     {
         return Reservation::where($query_params)->get();
+    }
+
+    /**
+     * Check if reservation exists
+     *
+     * @param int $id Reservation id
+     * @return Reservation instance
+     */
+    private function checkReservationExists(int $id): Reservation
+    {
+        $reservation = Reservation::where('id', $id)->first();
+        if (!$reservation) {
+            throw new ModelNotFoundException("Reservation not found", 404);
+        }
+        return $reservation;
     }
 }

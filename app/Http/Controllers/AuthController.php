@@ -8,10 +8,22 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
+use Illuminate\Http\JsonResponse;
 
+/**
+ * AuthController class
+ * 
+ * @package App\Http\Controllers
+ */
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    /**
+     * Register a new user.
+     * 
+     * @param Request $request The request object.
+     * @return JsonResponse The response object.
+     */
+    public function register(Request $request): JsonResponse
     {
         try {
             $request->validate([
@@ -33,11 +45,17 @@ class AuthController extends Controller
 
             return response()->json(['message' => 'User registered successfully', 'user' => $user, 'access_token' => $token], 201);
         } catch (\Exception $exception) {
-            return response()->json(['message' => 'User already exists'], 400);
+            return response()->json([$exception->getMessage()], 400);
         }
     }
 
-    public function login(Request $request)
+    /**
+     * Login a user.
+     * 
+     * @param Request $request The request object.
+     * @return JsonResponse The response object.
+     */
+    public function login(Request $request): JsonResponse
     {
         try {
             $request->validate([
@@ -57,18 +75,24 @@ class AuthController extends Controller
 
             return response()->json(['message' => 'Logged in successfully', 'user' => $user], 200);
         } catch (\Exception $exception) {
-            return response()->json(['message' => 'User not found'], 400);
+            return response()->json([$exception->getMessage()], 400);
         }
     }
 
-    public function logout(Request $request)
+    /**
+     * Logout a user.
+     * 
+     * @param Request $request The request object.
+     * @return JsonResponse The response object.
+     */
+    public function logout(Request $request): JsonResponse
     {
         try {
             $request->user()->tokens()->delete();
 
             return response()->json(['message' => 'Logged out successfully'], 200);
         } catch (\Exception $exception) {
-            return response()->json(['message' => 'Logged out unsuccessfull'], 400);
+            return response()->json([$exception->getMessage()], 400);
         }
     }
 }

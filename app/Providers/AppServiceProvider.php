@@ -13,11 +13,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(EventRepository::class, function ($app) {
-            return new EventRepository(new EventRepository());
+        $this->app->bind(EventRepository::class, function () {
+            return new EventRepository();
         });
-        $this->app->bind(ReservationRepository::class, function ($app) {
-            return new ReservationRepository(new ReservationRepository());
+        $this->app->bind(ReservationRepository::class, function () {
+            return new ReservationRepository();
         });
     }
 

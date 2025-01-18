@@ -3,7 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Event;
-
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 /**
  * Event repository class
  */
@@ -13,11 +14,22 @@ class EventRepository
      * Get event by id
      *
      * @param int $id Event id
-     * @return Event instance
+     * @return Event|null instance
      */
-    public function getById($id)
+    public function getById(int $id): Event|null
     {
-        return Event::findOrFail($id);
+        return $this->checkIfEventExists($id);
+    }
+
+    /**
+     * Get event by conditions
+     *
+     * @param array $conditions Conditions to get an event
+     * @return Event|null instance
+     */
+    public function get(array $conditions): Event|null
+    {
+        return Event::where($conditions)->first();
     }
 
     /**
@@ -25,7 +37,7 @@ class EventRepository
      *
      * @return Collection of Event instances
      */
-    public function getAll()
+    public function getAll(): Collection
     {
         return Event::all();
     }
@@ -36,7 +48,7 @@ class EventRepository
      * @param array $data data to create an event
      * @return Event instance
      */
-    public function create($data)
+    public function create(array $data): Event
     {
         return Event::create($data);
     }
@@ -45,21 +57,41 @@ class EventRepository
      * Update event instance
      *
      * @param int $id Event id
-     * @param array $data data to update an event
-     * @return Event
+     * @param array|Event $data data to update an event
+     * @return bool true if event updated, false otherwise
      */
-    public function update($id, $data): Event
+    public function update(int $id, array|Event $data): bool
     {
-        return Event::findOrFail($id)->update($data);
+        if ($data instanceof Event) {
+            return $data->save();
+        }
+
+        return $this->checkIfEventExists($id)->update($data);
     }
 
     /**
      * Delete an event
      *
      * @param int $id Event id
+     * @return bool true if event deleted, false otherwise
      */
-    public function delete($id)
+    public function delete(int $id): bool
     {
-        Event::findOrFail($id)->delete();
+        return $this->checkIfEventExists($id)->delete();
+    }
+
+    /**
+     * Check if event exists
+     *
+     * @param int $id Event id
+     * @return Event instance
+     */
+    private function checkIfEventExists(int $id): Event
+    {
+        $event = Event::where('id', $id)->first();
+        if (!$event) {
+            throw new ModelNotFoundException("Event not found", 404);
+        }
+        return $event;
     }
 }

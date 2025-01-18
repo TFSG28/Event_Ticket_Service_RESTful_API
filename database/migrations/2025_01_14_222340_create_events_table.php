@@ -15,9 +15,9 @@ return new class extends Migration
         if (!Schema::hasTable(Event::TABLE)) {
             Schema::create(Event::TABLE, function (Blueprint $table) {
                 $table->id();
-                $table->string('name');
+                $table->string('name')->unique();
                 $table->text('description');
-                $table->datetime('date');
+                $table->datetime('date')->unique();
                 $table->integer('availability')->unsigned();
                 $table->timestamps();
             });
