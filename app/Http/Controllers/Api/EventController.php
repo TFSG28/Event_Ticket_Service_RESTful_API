@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\BaseController;
 use Illuminate\Http\Request;
 use App\Repositories\EventRepository;
 use Illuminate\Http\JsonResponse;
@@ -12,7 +12,7 @@ use Illuminate\Http\JsonResponse;
  * 
  * @package App\Http\Controllers
  */
-class EventController extends Controller
+class EventController extends BaseController
 {
     private $eventRepository;
 
@@ -23,21 +23,47 @@ class EventController extends Controller
 
     /**
      * Display a listing of the events.
-     * 
+     * @Request({
+     *     summary: Get all events,
+     *     description: Get all events,
+     *     tags: Events
+     * })
+     * @Response({
+     *     code: 200,
+     *     description: return all events,
+     *     ref: Event
+     * })
+     * @Response({
+     *     code: 500,
+     *     description: Internal server error
+     * })
      * @return JsonResponse response success (all events) or error
      */
     public function index(): JsonResponse
-    {
+    {   
         try {
-            return response()->json($this->eventRepository->getAll());
+            return $this->sendResponse($this->eventRepository->getAll(), "Events retrieved successfully.");
         } catch (\Exception $exception) {
-            return response()->json([$exception->getMessage()], $exception->getCode());
+            return $this->sendResponse([], $exception->getMessage(), $exception->getCode());
         }
     }
 
     /**
      * Store a newly created event.
-     * 
+     * @Request({
+     *     summary: Create a new event,
+     *     description: Create a new event,
+     *     tags: Events
+     * })
+     * @Response({
+     *     code: 200,
+     *     description: Event created successfully,
+     *     ref: Event
+     * })
+     * @Response({
+     *     code: 500,
+     *     description: Internal server error
+     * })
      * @param Request $request Http request.
      * @return JsonResponse response success (event created) or error
      */
@@ -46,32 +72,58 @@ class EventController extends Controller
         try {
             $data = $request->all();
             if ($this->eventRepository->get(['name' => $data['name']], ['date' => $data['date']])) {
-                return response()->json(['message' => 'Event already exists'], 400);
+                return $this->sendResponse([], 'Event already exists', 400);
             }
-            return response()->json([$this->eventRepository->create($request->all())]);
+            return $this->sendResponse([$this->eventRepository->create($request->all())], "Event created successfully.");
         } catch (\Exception $exception) {
-            return response()->json([$exception->getMessage()], $exception->getCode());
+            return $this->sendResponse([], $exception->getMessage(), $exception->getCode());
         }
     }
 
     /**
      * Display the specified event.
-     * 
+     * @Request({
+     *     summary: Get an event,
+     *     description: Get an event,
+     *     tags: Events
+     * })
+     * @Response({
+     *     code: 200,
+     *     description: Event retrieved successfully,
+     *     ref: Event
+     * })
+     * @Response({
+     *     code: 500,
+     *     description: Internal server error
+     * })
      * @param int $id Event id.
      * @return JsonResponse response success (event) or error
      */
     public function show(int $id): JsonResponse
     {
         try {
-            return response()->json($this->eventRepository->getById($id));
+            return $this->sendResponse($this->eventRepository->getById($id), "Event retrieved successfully.");
         } catch (\Exception $exception) {
-            return response()->json($exception->getMessage(), $exception->getCode());
+            return $this->sendResponse([], $exception->getMessage(), $exception->getCode());
         }
     }
 
     /**
      * Update the specified event.
-     * 
+     * @Request({
+     *     summary: Update an event,
+     *     description: Update an event,
+     *     tags: Events
+     * })
+     * @Response({
+     *     code: 200,
+     *     description: Event updated successfully,
+     *     ref: Event
+     * })
+     * @Response({
+     *     code: 500,
+     *     description: Internal server error
+     * })
      * @param Request $request Http request.
      * @param int $id Event id.
      * @return JsonResponse response success (event updated) or error
@@ -79,16 +131,29 @@ class EventController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         try {
-            return response()->json($this->eventRepository->update($id, 
+            return $this->sendResponse($this->eventRepository->update($id, 
                 $request->all()) ? 'Event updated successfully' : 'Event not found');
         } catch (\Exception $exception) {
-            return response()->json($exception->getMessage(), 500);
+            return $this->sendResponse([], $exception->getMessage(), $exception->getCode());
         }
     }
 
     /**
      * Remove the specified event.
-     * 
+     * @Request({
+     *     summary: Delete an event,
+     *     description: Delete an event,
+     *     tags: Events
+     * })
+     * @Response({
+     *     code: 200,
+     *     description: Event deleted successfully,
+     *     ref: Event
+     * })
+     * @Response({
+     *     code: 500,
+     *     description: Internal server error
+     * })
      * @param int $id Event id.
      * @return JsonResponse response success (event deleted) or error
      */
@@ -96,9 +161,9 @@ class EventController extends Controller
     {
         try {
             $this->eventRepository->delete($id);
-            return response()->json([$this->eventRepository->delete($id) ? 'Event deleted successfully' : 'Event not found']);
+            return $this->sendResponse([], 'Event deleted successfully');
         } catch (\Exception $exception) {
-            return response()->json(['message' => $exception->getMessage()], 500);
+            return $this->sendResponse([], $exception->getMessage(), $exception->getCode());
         }
     }
 }

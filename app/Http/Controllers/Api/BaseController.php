@@ -24,6 +24,6 @@ class BaseController extends Controller
         if (!empty($data)) {
             $response[$field] = json_decode($data, true) ?? $data;
         }
-        return response()->json($response, $statusCode);
+        return response()->json($response, boolval(preg_match('/^[1-5][0-9][0-9]$/', $statusCode)) ? $statusCode : 500);
     }
 }

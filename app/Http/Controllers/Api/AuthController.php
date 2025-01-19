@@ -13,6 +13,20 @@ use Laravel\Sanctum\PersonalAccessToken;
 class AuthController extends BaseController
 {
     /**
+     * @Request({
+     *     summary: Register a new user,
+     *     description: Register a new user,
+     *     tags: Auth
+     * })
+     * @Response({
+     *     code: 200,
+     *     description: User registered successfully,
+     *     ref: User
+     * })
+     * @Response({
+     *     code: 500,
+     *     description: Internal server error
+     * })
      * @param Request $request
      * @return JsonResponse
      */
@@ -36,7 +50,22 @@ class AuthController extends BaseController
     }
 
     /**
-     * @throws AuthenticationException
+     * @Request({
+     *     summary: Login a user,
+     *     description: Login a user,
+     *     tags: Auth
+     * })
+     * @Response({
+     *     code: 200,
+     *     description: User login successfully,
+     *     ref: User
+     * })
+     * @Response({
+     *     code: 500,
+     *     description: Internal server error
+     * })
+     * @param Request $request
+     * @return JsonResponse
      */
     public function login(Request $request): JsonResponse
     {
@@ -48,13 +77,28 @@ class AuthController extends BaseController
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->sendResponse("", 'Unauthorised', 401);
+            return $this->sendResponse("", 'Wrong credentials', 401);
         }
         return $this->sendResponse($user->createToken('auth_token')->plainTextToken, 'User login successfully.', 200, "token");
     }
 
     /**
-     * @throws AuthenticationException
+     * @Request({
+     *     summary: Logout a user,
+     *     description: Logout a user,
+     *     tags: Auth
+     * })
+     * @Response({
+     *     code: 200,
+     *     description: User logout successfully,
+     *     ref: User
+     * })
+     * @Response({
+     *     code: 500,
+     *     description: Internal server error
+     * })
+     * @param Request $request
+     * @return JsonResponse
      */
     public function logout(Request $request): JsonResponse
     {
@@ -64,6 +108,9 @@ class AuthController extends BaseController
         $token = PersonalAccessToken::findToken($request->bearerToken());
         if (!$token) {
             throw new AuthenticationException('Token not found or expired.');
+        }
+        if (!$token->delete()) {
+            return $this->sendResponse([], 'User logout failed.');
         }
         return $this->sendResponse([], 'User logout successfully.');
     }
