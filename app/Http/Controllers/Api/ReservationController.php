@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -60,20 +60,15 @@ class ReservationController extends Controller
     public function store(Request $request): JsonResponse
     {
         try {
+            // Start a transaction
             DB::beginTransaction();
             $reservations = [];
 
-            // Iterate if multiple reservations are being made
-            if (is_array($request->all())) {
-                foreach ($request->all() as $ticket) {
-                    $this->validateBodyKeys($ticket);
-                    $this->validateReservation($ticket);
-                    $reservations[] = $this->reservation_repository->create($ticket);
-                }
-            } else {
-                $this->validateBodyKeys($request->all());
-                $this->validateReservation($request->all());
-                $reservations[] = $this->reservation_repository->create($request->all());
+            // Iterate over one or multiple reservations
+            foreach ($request->all() as $ticket) {
+                $this->validateBodyKeys($ticket);
+                $this->validateReservation($ticket);
+                $reservations[] = $this->reservation_repository->create($ticket);
             }
 
             // Commit the transaction
@@ -175,7 +170,7 @@ class ReservationController extends Controller
      */
     private function validateReservation(array $ticket): Event
     {
-
+        
         // Check if the event is available
         $event = $this->event_repository->getById($ticket['event_id']);
 

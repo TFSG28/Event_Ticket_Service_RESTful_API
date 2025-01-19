@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\ReservationController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,7 +16,13 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('logout', [AuthController::class, 'logout']);
+Route::controller(AuthController::class)->group(function(){
+    Route::post('login', 'login')->name('login');
+    Route::post('logout', [AuthController::class, "logout"])->name('logout');
 });
 
+Route::middleware('auth:sanctum')->group( function () {
+    Route::post('register', [AuthController::class, "register"])->name('register');
+    Route::resource('events', EventController::class);
+    Route::resource('reservations', ReservationController::class);
+});
