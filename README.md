@@ -11,6 +11,7 @@ This is a RESTful API for an event ticket service. It allows users to register, 
 - PHP 8.2 (https://www.php.net/downloads)
 - Laravel 10 (https://laravel.com/docs/10.x/installation)
 - MySQL (https://www.mysql.com/downloads/)
+- Postman (https://www.postman.com/downloads/)
 
 ## Installation
 
