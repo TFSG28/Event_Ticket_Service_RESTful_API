@@ -71,7 +71,7 @@ class EventController extends BaseController
     {
         try {
             $data = $request->all();
-            if ($this->eventRepository->get(['name' => $data['name']], ['date' => $data['date']])) {
+            if ($this->eventRepository->get(['name' => $data['name']]) || $this->eventRepository->get(['date' => $data['date']])) {
                 return $this->sendResponse([], 'Event already exists', 400);
             }
             return $this->sendResponse([$this->eventRepository->create($request->all())], "Event created successfully.");
@@ -131,8 +131,8 @@ class EventController extends BaseController
     public function update(Request $request, int $id): JsonResponse
     {
         try {
-            return $this->sendResponse($this->eventRepository->update($id, 
-                $request->all()) ? 'Event updated successfully' : 'Event not found');
+            $this->eventRepository->update($id, $request->all());
+            return $this->sendResponse($this->eventRepository->getById($id), 'Event updated successfully');
         } catch (\Exception $exception) {
             return $this->sendResponse([], $exception->getMessage(), $exception->getCode());
         }

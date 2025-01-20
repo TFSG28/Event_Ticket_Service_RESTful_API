@@ -16,12 +16,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(AuthController::class)->prefix('v1')->group(function(){
+Route::controller(AuthController::class)->prefix('v1')->group(function () {
     Route::post('login', 'login')->name('login');
     Route::post('logout', [AuthController::class, "logout"])->name('logout');
 });
 
-Route::middleware('auth:sanctum')->prefix('v1')->group( function () {
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::post('register', [AuthController::class, "register"])->name('register');
     Route::resource('events', EventController::class);
     Route::resource('reservations', ReservationController::class);

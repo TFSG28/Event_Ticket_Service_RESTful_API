@@ -17,7 +17,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "6|Nu4IfZUqdOvwA8EXHVECr941IUCdhgfXAOTKWYI902fdc445",
+									"value": "1|LktBg4jMKDLLJimt8KcJHpheL28pgDM27j28XOtAb37f2cad",
 									"type": "string"
 								}
 							]
@@ -63,53 +63,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "6|Nu4IfZUqdOvwA8EXHVECr941IUCdhgfXAOTKWYI902fdc445",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"password\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:80/api/v1/register",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "80",
-							"path": [
-								"api",
-								"v1",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "http://localhost:80/api/v1/register",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "6|Nu4IfZUqdOvwA8EXHVECr941IUCdhgfXAOTKWYI902fdc445",
+									"value": "2|91Bqg8pcBV536nw9PLdOl7WBWOB1o7isrmBmKEPc33eb408e",
 									"type": "string"
 								}
 							]
@@ -146,6 +100,52 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "http://localhost:80/api/v1/register",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|LktBg4jMKDLLJimt8KcJHpheL28pgDM27j28XOtAb37f2cad",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Tiago\",\r\n    \"email\": \"tiago@tiago.com\",\r\n    \"password\": \"password\",\r\n    \"password_confirmation\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:80/api/v1/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "80",
+							"path": [
+								"api",
+								"v1",
+								"register"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -153,22 +153,40 @@
 			"name": "Events",
 			"item": [
 				{
-					"name": "http://localhost:80/api/events",
+					"name": "http://localhost:80/api/v1/events",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "4|aENJYyATjOjqOFs4JBdqIHXw89R3NLcNbt9PAYwBf19fc559",
+									"value": "1|PYYGKuG3tZF5BQocFMl1xqekollwA6f6S4z97zUma1f88e6d",
 									"type": "string"
 								}
 							]
 						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:80/api/events",
+							"raw": "http://localhost:80/api/v1/events",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -176,6 +194,7 @@
 							"port": "80",
 							"path": [
 								"api",
+								"v1",
 								"events"
 							]
 						}
@@ -183,22 +202,37 @@
 					"response": []
 				},
 				{
-					"name": "http://localhost:80/api/events",
+					"name": "http://localhost:80/api/v1/events",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "4|aENJYyATjOjqOFs4JBdqIHXw89R3NLcNbt9PAYwBf19fc559",
+									"value": "3|wTuHqowhN6Xk8MHD2Ypl6GFUMHNjwTzC2PdNDSzBae233c02",
 									"type": "string"
 								}
 							]
 						},
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:80/api/events",
+							"raw": "http://localhost:80/api/v1/events/5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -206,29 +240,46 @@
 							"port": "80",
 							"path": [
 								"api",
-								"events"
+								"v1",
+								"events",
+								"5"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "http://localhost:80/api/events",
+					"name": "http://localhost:80/api/v1/events",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "4|aENJYyATjOjqOFs4JBdqIHXw89R3NLcNbt9PAYwBf19fc559",
+									"value": "3|wTuHqowhN6Xk8MHD2Ypl6GFUMHNjwTzC2PdNDSzBae233c02",
 									"type": "string"
 								}
 							]
 						},
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"availability\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:80/api/events",
+							"raw": "http://localhost:80/api/v1/events/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -236,29 +287,46 @@
 							"port": "80",
 							"path": [
 								"api",
-								"events"
+								"v1",
+								"events",
+								"1"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "http://localhost:80/api/events",
+					"name": "http://localhost:80/api/v1/events",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "4|aENJYyATjOjqOFs4JBdqIHXw89R3NLcNbt9PAYwBf19fc559",
+									"value": "3|wTuHqowhN6Xk8MHD2Ypl6GFUMHNjwTzC2PdNDSzBae233c02",
 									"type": "string"
 								}
 							]
 						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Obon2\",\r\n    \"description\": \"The festival is based on a legend about a Buddhist monk called Mogallana. The story goes that Mogallana could see into the afterlife and saved his deceasemother from going to hell by giving offerings to Buddhist monks. Having gained redemption for his mother, he danced in celebration, joined by others in a large circleThis dance is known as the Bon Odori dance\",\r\n    \"date\": \"2028-08-13 13:00:00\",\r\n    \"availability\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:80/api/events",
+							"raw": "http://localhost:80/api/v1/events",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -266,6 +334,7 @@
 							"port": "80",
 							"path": [
 								"api",
+								"v1",
 								"events"
 							]
 						}
@@ -288,7 +357,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "4|aENJYyATjOjqOFs4JBdqIHXw89R3NLcNbt9PAYwBf19fc559",
+									"value": "1|PYYGKuG3tZF5BQocFMl1xqekollwA6f6S4z97zUma1f88e6d",
 									"type": "string"
 								}
 							]
@@ -303,7 +372,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"number_of_tickets\": 2\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -311,7 +380,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:80/api/v1/reservations/1",
+							"raw": "http://localhost:80/api/v1/reservations",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -320,8 +389,7 @@
 							"path": [
 								"api",
 								"v1",
-								"reservations",
-								"1"
+								"reservations"
 							]
 						}
 					},
@@ -335,7 +403,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "4|aENJYyATjOjqOFs4JBdqIHXw89R3NLcNbt9PAYwBf19fc559",
+									"value": "1|PYYGKuG3tZF5BQocFMl1xqekollwA6f6S4z97zUma1f88e6d",
 									"type": "string"
 								}
 							]
@@ -382,16 +450,22 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "4|aENJYyATjOjqOFs4JBdqIHXw89R3NLcNbt9PAYwBf19fc559",
+									"value": "1|PYYGKuG3tZF5BQocFMl1xqekollwA6f6S4z97zUma1f88e6d",
 									"type": "string"
 								}
 							]
 						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"event_id\": 1,\r\n        \"name\": \"Test User\",\r\n        \"user_id\": 1,\r\n        \"number_of_tickets\": 1\r\n    },\r\n    {\r\n        \"event_id\": 1,\r\n        \"name\": \"Test User\",\r\n        \"user_id\": 1,\r\n        \"number_of_tickets\": 3\r\n    }\r\n]",
+							"raw": "{\r\n    \"event_id\": 1,\r\n    \"name\": \"Admin\",\r\n    \"user_id\": 1,\r\n    \"number_of_tickets\": 1\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -422,7 +496,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "4|aENJYyATjOjqOFs4JBdqIHXw89R3NLcNbt9PAYwBf19fc559",
+									"value": "1|PYYGKuG3tZF5BQocFMl1xqekollwA6f6S4z97zUma1f88e6d",
 									"type": "string"
 								}
 							]
@@ -437,7 +511,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"number_of_tickets\": 2\r\n}",
+							"raw": "{\r\n    \"number_of_tickets\": 3\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

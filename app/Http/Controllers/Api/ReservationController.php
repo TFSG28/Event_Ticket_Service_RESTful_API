@@ -193,7 +193,7 @@ class ReservationController extends BaseController
             DB::commit();
 
             // Return a success message
-            return $this->sendResponse([], 'Reservation updated successfully');
+            return $this->sendResponse($this->reservation_repository->getById($id), 'Reservation updated successfully');
         } catch (\Exception $exception) {
             // Rollback the transaction if an error occurs
             DB::rollBack();
@@ -277,7 +277,7 @@ class ReservationController extends BaseController
 
         // Check if the event has ended or is in the future
         if ($event->date < now()) {
-            throw new Exception("Event has ended for event '{$event->name}'", 400);
+            throw new Exception("Event '{$event->name}' has ended", 400);
         } elseif (strtotime($event->date) > strtotime(date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . " + 5 years")))) {
             throw new Exception("Tickets available at a later date for event '{$event->name}'", 400);
         }

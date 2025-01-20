@@ -46,6 +46,7 @@ class AuthController extends BaseController
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
         return $this->sendResponse($user->toArray(), 'User register successfully.');
     }
 

@@ -22,7 +22,11 @@ class BaseController extends Controller
             "message" => $message
         ];
         if (!empty($data)) {
-            $response[$field] = json_decode($data, true) ?? $data;
+            if (is_array($data)) {
+                $response[$field] = $data;
+            } else {
+                $response[$field] = json_decode($data, true) ?? $data;
+            }
         }
         return response()->json($response, boolval(preg_match('/^[1-5][0-9][0-9]$/', $statusCode)) ? $statusCode : 500);
     }
